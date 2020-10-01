@@ -1,0 +1,51 @@
+#!/bin/bash
+
+function usage {
+    echo "usage: driver directory"
+}
+
+if [ $# -ne 1 ]; then
+    usage
+    exit 1
+fi
+
+if [ ! -d $1 ]; then
+    echo "Error: Directory $1 does not exist"
+    exit 2
+fi
+
+cd $1
+
+if [ ! -f config ]; then
+    echo "Error: config file not found"
+    exit 3
+fi
+
+. config
+
+echo "$name - $url"
+
+echo "Building"
+res=$(eval "$build")
+ret=$?
+echo $res
+
+if [ $ret -ne 0 ]; then
+    echo "Error: Build failed [$ret]"
+    exit 4
+fi
+
+temp=$(mktemp)
+echo "Executing test cases"
+for case in $(ls cases); do
+    echo " Executing case $case"
+    cat "cases/$case/in.txt" | eval $run > $temp
+    diff $temp cases/$case/out.txt
+    if [ $? -ne 0 ]; then
+        rm $temp
+        echo "  KO"
+        exit 5
+    fi
+    echo "  OK"
+done
+rm $temp

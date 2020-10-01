@@ -1,0 +1,4 @@
+name=Template
+url=http://ciaranmoran.co.uk/
+build="echo some build output"
+run="cat"
