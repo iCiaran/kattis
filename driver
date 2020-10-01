@@ -40,6 +40,12 @@ echo "Executing test cases"
 for case in $(ls cases); do
     echo " Executing case $case"
     cat "cases/$case/in.txt" | eval $run > $temp
+    res=$?
+    if [ $res -ne 0 ]; then
+        echo "Error: Execution failed [$res]"
+        rm $temp
+        exit 6
+    fi
     diff $temp cases/$case/out.txt
     if [ $? -ne 0 ]; then
         rm $temp
