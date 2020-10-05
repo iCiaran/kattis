@@ -1,0 +1,4 @@
+name="10 Kinds of People"
+url="https://open.kattis.com/problems/10kindsofpeople"
+build="go build -v"
+run="./10kindsofpeople"
