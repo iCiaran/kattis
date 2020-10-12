@@ -46,7 +46,7 @@ for case in $(ls cases); do
         rm $temp
         exit 6
     fi
-    diff $temp cases/$case/out.txt
+    diff -y $temp cases/$case/out.txt
     if [ $? -ne 0 ]; then
         rm $temp
         echo "  KO"
