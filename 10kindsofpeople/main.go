@@ -130,11 +130,10 @@ func searchRegion(p *point, v map[point]struct{}, r *[]map[point]struct{}, g [][
 	*r = append(*r, make(map[point]struct{}))
 	i := len(*r) - 1
 	t := g[p.y][p.x]
-	queue := make([]*point, 1)
-	queue[0] = p
+	queue := make(chan *point, 1000000)
+	queue <- p
 	for len(queue) > 0 {
-		curr := queue[0]
-		queue = queue[1:]
+		curr := <-queue
 		v[*curr] = Empty
 		(*r)[i][*curr] = Empty
 		for _, dir := range d {
@@ -151,7 +150,7 @@ func searchRegion(p *point, v map[point]struct{}, r *[]map[point]struct{}, g [][
 			}
 			nextPoint := NewPoint(nx, ny)
 			if _, ok := v[*nextPoint]; !ok {
-				queue = append(queue, nextPoint)
+				queue <- nextPoint
 			}
 		}
 	}
