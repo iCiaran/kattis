@@ -1,0 +1,4 @@
+name=ABC
+url=https://open.kattis.com/problems/abc
+build="cobc -x abc.cbl"
+run="./abc"
