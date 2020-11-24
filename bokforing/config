@@ -1,0 +1,4 @@
+name=Bokforing
+url=https://open.kattis.com/problems/bokforing
+build="go build ."
+run="go run ."
