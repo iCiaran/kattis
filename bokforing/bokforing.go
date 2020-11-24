@@ -19,18 +19,20 @@ func main() {
 	fmt.Sscanf(scanner.Text(), "%d %d", &N, &Q)
 	lastResetAmount := 0
 	lastResetLine := -1
-	wealth := make(map[int]*pair, N)
+	wealthValues := make([]int, N+1)
+	wealthLast := make([]int, N+1)
 
-	for i := 0; i < Q; i++ {
+	for i := 1; i <= Q; i++ {
 		scanner.Scan()
 		b := scanner.Bytes()
 		if b[0] == 'S' {
 			n, m := toIntSet(b[4:])
-			wealth[n] = &pair{m, i}
+			wealthValues[n] = m
+			wealthLast[n] = i
 		} else if b[0] == 'P' {
 			person := toInt(b[6:])
-			if v, ok := wealth[person]; ok && v.lastSet > lastResetLine {
-				fmt.Println(v.value)
+			if wealthLast[person] > lastResetLine {
+				fmt.Println(wealthValues[person])
 			} else {
 				fmt.Println(lastResetAmount)
 			}
