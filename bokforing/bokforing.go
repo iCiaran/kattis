@@ -6,31 +6,37 @@ import (
 	"os"
 )
 
+type pair struct {
+	value   int
+	lastSet int
+}
+
 func main() {
-	var N, Q int64
+	var N, Q int
 	scanner := bufio.NewScanner(os.Stdin)
 	scanner.Scan()
 
 	fmt.Sscanf(scanner.Text(), "%d %d", &N, &Q)
-	lastReset := 0
-	wealth := make(map[int]int, N)
+	lastResetAmount := 0
+	lastResetLine := -1
+	wealth := make(map[int]*pair, N)
 
-	for ; Q > 0; Q-- {
+	for i := 0; i < Q; i++ {
 		scanner.Scan()
 		b := scanner.Bytes()
 		if b[0] == 'S' {
 			n, m := toIntSet(b[4:])
-			wealth[n] = m
+			wealth[n] = &pair{m, i}
 		} else if b[0] == 'P' {
-			i := toInt(b[6:])
-			if v, ok := wealth[i]; ok {
-				fmt.Println(v)
+			person := toInt(b[6:])
+			if v, ok := wealth[person]; ok && v.lastSet > lastResetLine {
+				fmt.Println(v.value)
 			} else {
-				fmt.Println(lastReset)
+				fmt.Println(lastResetAmount)
 			}
 		} else {
-			wealth = make(map[int]int, N)
-			lastReset = toInt(b[8:])
+			lastResetAmount = toInt(b[8:])
+			lastResetLine = i
 		}
 	}
 }
